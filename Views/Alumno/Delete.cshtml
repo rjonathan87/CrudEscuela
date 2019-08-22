@@ -1,0 +1,23 @@
+@model CrudEscuela.Models.Alumno
+
+@{
+    ViewData["Title"] = "Eliminar Alumno";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<h3>Está seguro de borrar esto?</h3>
+<div>
+    <h4>Expediente</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+    </dl>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Borrar" class="btn btn-danger" /> |
+        <a asp-action="Index">Volver a la lista</a>
+    </form>
+</div>
