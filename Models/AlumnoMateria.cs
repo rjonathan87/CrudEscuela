@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using CrudEscuela.Models;
-using ex.Models;
 
 namespace CrudEscuela.Models
 {

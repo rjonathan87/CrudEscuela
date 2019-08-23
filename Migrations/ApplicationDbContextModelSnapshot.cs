@@ -24,6 +24,14 @@ namespace CrudEscuela.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ApellidoMaterno")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("ApellidoPaterno")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
                     b.Property<string>("CorreoElectronico")
                         .IsRequired();
 
@@ -54,13 +62,15 @@ namespace CrudEscuela.Migrations
                     b.ToTable("AlumnosMaterias");
                 });
 
-            modelBuilder.Entity("ex.Models.Materia", b =>
+            modelBuilder.Entity("CrudEscuela.Models.Materia", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("Activo");
+
+                    b.Property<decimal>("Costo");
 
                     b.Property<string>("NombreMateria")
                         .IsRequired()
@@ -74,12 +84,12 @@ namespace CrudEscuela.Migrations
             modelBuilder.Entity("CrudEscuela.Models.AlumnoMateria", b =>
                 {
                     b.HasOne("CrudEscuela.Models.Alumno", "Alumno")
-                        .WithMany()
+                        .WithMany("AlumnosMaterias")
                         .HasForeignKey("AlumnoId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ex.Models.Materia", "Materia")
-                        .WithMany()
+                    b.HasOne("CrudEscuela.Models.Materia", "Materia")
+                        .WithMany("AlumnosMaterias")
                         .HasForeignKey("MateriaId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

@@ -1,4 +1,26 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿(function($){
 
-// Write your JavaScript code.
+    //cargamos los datos a la tabla de materias
+    listaDeSesiones(1);
+
+
+    function listaDeSesiones(Id) {
+        //$("#table-data-materias tbody").remove();
+        
+        $.ajax({
+            url: "../../AlumnoMateria/GetMateriasByAlumno",
+            type: "post",
+            data: {
+                Id: Id
+            },
+            dataType: "json",
+            success: function (data) {
+
+                console.log(data);
+                                
+
+            }
+        });
+
+    }
+})(jQuery);

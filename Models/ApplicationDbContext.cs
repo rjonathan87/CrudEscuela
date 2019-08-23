@@ -1,7 +1,5 @@
-using System;
-using ex.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+
 
 namespace CrudEscuela.Models
 {
@@ -21,6 +19,16 @@ namespace CrudEscuela.Models
         {
             //indicamos que las dos llaves son una llave compuesta
             modelBuilder.Entity<AlumnoMateria>().HasKey(x => new { x.MateriaId, x.AlumnoId } );
+            
+            modelBuilder.Entity<AlumnoMateria>()
+                        .HasOne(x => x.Materia)
+                        .WithMany(b => b.AlumnosMaterias)
+                        .HasForeignKey(bc => bc.MateriaId);  
+
+            modelBuilder.Entity<AlumnoMateria>()
+                .HasOne(bc => bc.Materia)
+                .WithMany(c => c.AlumnosMaterias)
+                .HasForeignKey(bc => bc.MateriaId);
         }
 
         public virtual DbSet<Alumno> Alumnos { get; set; }

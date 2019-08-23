@@ -8,12 +8,17 @@
 
 <h3>Está seguro de borrar esto?</h3>
 <div>
-    <h4>Expediente</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Nombre)
         </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Nombre) 
+            @Html.DisplayFor(model => model.ApellidoPaterno) 
+            @Html.DisplayFor(model => model.ApellidoMaterno)
+        </dd>
+            
     </dl>
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />

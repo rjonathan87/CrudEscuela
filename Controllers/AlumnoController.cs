@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CrudEscuela.Models;
 
-namespace ex.Controllers
+namespace CrudEscuela.Controllers
 {
     public class AlumnoController : Controller
     {
@@ -36,7 +33,7 @@ namespace ex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Edad,Matricula,CorreoElectronico")] Alumno alumno)
+        public async Task<IActionResult> Create([Bind("Id,Nombre, ApellidoPaterno, ApellidoMaterno,Edad,Matricula,CorreoElectronico")] Alumno alumno)
         {
             if (ModelState.IsValid)
             {
@@ -55,7 +52,12 @@ namespace ex.Controllers
                 return NotFound();
             }
 
-            var alumno = await _context.Alumnos.FindAsync(id);
+            var alumno = await _context.Alumnos
+                .Where(a => a.Id == id)
+                .Include(am => am.AlumnosMaterias)
+                .ThenInclude(m => m.Materia)
+                .FirstOrDefaultAsync();
+
             if (alumno == null)
             {
                 return NotFound();
@@ -68,7 +70,7 @@ namespace ex.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Edad,Matricula,CorreoElectronico")] Alumno alumno)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,ApellidoPaterno,ApellidoMaterno,Edad,Matricula,CorreoElectronico")] Alumno alumno)
         {
             if (id != alumno.Id)
             {
@@ -96,6 +98,35 @@ namespace ex.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(alumno);
+        }
+
+        // GET: Alumno/Delete/1
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var alumno = await _context.Alumnos
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (alumno == null)
+            {
+                return NotFound();
+            }
+
+            return View(alumno);
+        }
+
+        // POST: Materia/Delete/2
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var alumno = await _context.Alumnos.FindAsync(id);
+            _context.Alumnos.Remove(alumno);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
 

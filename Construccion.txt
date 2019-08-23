@@ -1,0 +1,81 @@
+1.- crear el proyecto
+cd /home/xxxxxxx/Projects/dotnet/
+dotnet new mvc -o CrudEscuela
+cd CrudEscuela
+code .
+
+2.- Crear repositorio en Github
+https://github.com/rjonathan87/CrudEscuela
+
+3.- Crear el .gitignore en el raiz para ignorar archivos no necesarios para clonar el proyecto
+
+4.- 
+git init
+git push -u origin master
+
+5.- Crear la conección a la base de datos
+- Instalar ef
+en https://www.nuget.org/ buscamos 
+- Microsoft.EntityFrameworkCore.SQLServer
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 2.2.6
+
+- Microsoft.EntityFrameworkCore.Tools
+dotnet add package Microsoft.EntityFrameworkCore.Tools --version 2.2.6
+
+- Modificamos el archivo appsettings.json para agregar los datos de la conección a la base de datos
+
+- Modificamos el Startup.cs para agregar el servicio de SqlServer, indicándo que es el DefaultConnection el encargado de dar los parámetros de conección 
+
+6.- Crear el DbContext
+>> Models/ApplicationDbcontext.cs
+
+Hereda de Dbcontext
+- Se crean las propiedades dbset para interactuar con los modelos
+-  Crear el OnConfiguring
+
+7.- crear los modelos
+>> Models/Alumno.cs
+>> Models/Materia.cs
+>> Models/AlumnoMateria.cs
+
+8.- Con el Api Fluent creamos una relación uno a mucho para la tabla AlumnosMaterias en el archivo ApplicationDbContext.cs, esto ya que un Alumno puede estar inscrito en varios Cursos y un Curso puede contener muchos Alumnos
+
+9.- Creamos la base de datos en el servidor de SqlServer
+
+10.- creamos las migraciones
+dotnet ef migrations add InitialCreate
+
+11.- Actualizamos la base de datos
+dotnet ef database update
+
+12.- Vamos con los controladores, creando un Controller por cada entidad generada anteriormente
+>> Controllers/AlumnoController.cs
+>> Controllers/MateriaController.cs
+>> Controllers/AlumnoMateriaController.cs
+
+13.- creamos las carpetas para cada controlador 
+mkdir Views/Alumno
+mkdir Views/Materia
+
+14.- dentro de cada carpeta agregamos las vistas para el CRUD
+>> Views/Alumno/Create.cshtml
+>> Views/Alumno/Details.cshtml
+>> Views/Alumno/Edit.cshtml
+>> Views/Alumno/Index.cshtml
+>> Views/Alumno/Delete.cshtml
+
+>> Views/Materia/Create.cshtml
+>> Views/Materia/Details.cshtml
+>> Views/Materia/Edit.cshtml
+>> Views/Materia/Index.cshtml
+>> Views/Materia/Delete.cshtml
+
+15.- Modificamos el archivo Shared/_Layout.cshtml para agregar las opciones en el menú
+
+16.- Agregamos el código para las vistas de Alumno y Materia
+
+17.- Se agrega la table de las materias para agregar y borrar materias a un alumno
+
+18.- Se agregan los crud para ser modificados vía ajax en el controlador 
+
+19.- Se agregan los métodos para devolver json desde el controller de la lista de materias para cada Alumno

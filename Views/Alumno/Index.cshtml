@@ -16,6 +16,12 @@
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.ApellidoPaterno)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApellidoMaterno)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Edad)
             </th>
             <th>
@@ -35,6 +41,12 @@
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.ApellidoPaterno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Edad)
             </td>
             <td>
@@ -46,7 +58,6 @@
             
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Borrar</a>
             </td>
         </tr>
