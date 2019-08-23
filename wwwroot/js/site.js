@@ -3,10 +3,9 @@
     //cargamos los datos a la tabla de materias
     var Id = $("#Id").val();
     
-    listaDeSesiones(Id); //aquí se carga el id que viene de la url
+    listaDeMaterias(Id); //aquí se carga el id que viene de la url
 
-
-    function listaDeSesiones(Id) {
+    function listaDeMaterias(Id) {
         $("#table-data-materias tbody").remove();
         
         $.ajax({
@@ -46,4 +45,34 @@
         });
 
     }
+
+
+    /**Autocomplete Materias disponibles */
+
+    $("#materiasDisponibles").autocomplete({
+        source: function (request, response){
+            $.ajax({
+                url: "../../Materia/MateriasDisponibles",
+                type: "POST",
+                dataType: "json",
+                data: { search: request.term },
+                success: function(data){
+                    response($.map(data, function(item){
+                        return { 
+                            value :     item.id,
+                            label:      item.nombreMateria,
+                            activo:     item.activo,
+                            costo:      item.costo
+                        }
+                    }))
+                }
+            })
+        },
+        select: function(event, ui){
+            console.log(ui);
+            
+        }
+    });
+
+
 })(jQuery);

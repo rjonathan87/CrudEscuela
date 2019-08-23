@@ -127,5 +127,22 @@ namespace CrudEscuela.Controllers
             return _context.Materias.Any(e => e.Id == id);
         }
 
+        // retorna una lista de codigos según la búsqueda que llega
+        [HttpPost]
+        public async Task<JsonResult> MateriasDisponibles(string search)
+        {
+            var MateriasList = await _context.Materias
+                .Where(m => m.NombreMateria.Contains(search))
+                .Select(s => new { 
+                                    Id              = s.Id,
+                                    NombreMateria   = s.NombreMateria,
+                                    Activo          = s.Activo,
+                                    Costo           = s.Costo
+                                })
+                .ToListAsync();
+                            
+            return Json(MateriasList);
+        }
+
     }
 }
