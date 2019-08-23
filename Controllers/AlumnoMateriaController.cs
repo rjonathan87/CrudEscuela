@@ -20,19 +20,23 @@ namespace CrudEscuela.Controllers
         [HttpPost]
         public async Task<JsonResult> GetMateriasByAlumno(int Id)
         {
-            var alumno = _context.Alumnos
-                
-                .Where(a => a.Id == Id)
+            var alumnomaterias = _context.AlumnosMaterias
 
-                .Include(am => am.AlumnosMaterias)
-                
-                .ThenInclude(m => m.Materia)
-                
-                .AsNoTracking()
+                .Where(a => a.AlumnoId == Id)
 
+                .Include(am => am.Materia)
+
+                .Select(r => new Models.Materia 
+                    {
+                        Id = r.Materia.Id,
+                        NombreMateria = r.Materia.NombreMateria,
+                        Activo = r.Materia.Activo,
+                        Costo = r.Materia.Costo
+                    }
+                )
                 .ToListAsync();
 
-            return Json(await alumno);
+            return Json(await alumnomaterias);
 
         }
 

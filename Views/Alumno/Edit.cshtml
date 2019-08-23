@@ -8,6 +8,8 @@
 
 <hr />
 
+<input asp-for="Id" type="hidden" />
+
 <!-- Menú para edición de Expedientes -->
 <div class="container">
     <div class="row justify-content-center">
@@ -62,10 +64,16 @@
             <table class="table table-striped table-hover table-responsive" id="table-data-materias">
                 <thead class="thead-dark">
                     <tr>
-                        <th colspan="2">Materias Asignadas</th>
+                        <th colspan="3">Materias Asignadas</th>
+                    </tr>
+                    <tr>
+                        <th>Materia</th>
+                        <th>Costo</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
+                    @*
                     @foreach(var item in Model.AlumnosMaterias){
                         <tr>
                             <td>
@@ -83,7 +91,13 @@
                             </td>
                         </tr>
                     }
+                    *@
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2" class="text-rigth" id="totalCosto">Total: </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
