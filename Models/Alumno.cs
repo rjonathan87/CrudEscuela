@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace CrudEscuela.Models
-{
+{ 
     public class Alumno
     {
         public int Id { get; set; }
