@@ -36,10 +36,10 @@ namespace CrudEscuela.Controllers
             return Json(await alumnomaterias);
         }
 
-        public async Task AddMateriaAlumno()
-        {
-
-        }
+        // public async Task AddAlumnoMateria()
+        // {
+        //     await 
+        // }
 
         private bool AlumnoMateriaExists(int id)
         {

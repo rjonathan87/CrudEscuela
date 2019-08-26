@@ -79,6 +79,18 @@
     {
         let materiaAdd = datos.item.value;
 
-
+        $.ajax({
+            url: "../../AlumnoMateria/AddAlumnoMateria",
+            type: "POST",
+            dataType: "json",
+            data: { 
+                AlumnoId: 
+                MateriaId: materiaAdd 
+            },
+            success: function(data){
+                console.log(data);   
+            }
+        })
+        
     }
 })(jQuery);
