@@ -21,11 +21,8 @@ namespace CrudEscuela.Controllers
         public async Task<JsonResult> GetMateriasByAlumno(int Id)
         {
             var alumnomaterias = _context.AlumnosMaterias
-
                 .Where(a => a.AlumnoId == Id)
-
                 .Include(am => am.Materia)
-
                 .Select(r => new Models.Materia 
                     {
                         Id = r.Materia.Id,
@@ -37,9 +34,12 @@ namespace CrudEscuela.Controllers
                 .ToListAsync();
 
             return Json(await alumnomaterias);
-
         }
 
+        public async Task AddMateriaAlumno()
+        {
+
+        }
 
         private bool AlumnoMateriaExists(int id)
         {

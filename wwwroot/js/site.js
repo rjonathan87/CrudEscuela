@@ -17,6 +17,7 @@
             dataType: "json",
             success: function (data) {
                 console.log(data);
+                var total = 0;
                 
                 let table = document.getElementById("table-data-materias");
                 tbody = table.createTBody();
@@ -29,6 +30,8 @@
                     var cell2 = row.insertCell(1);
                     var cell3 = row.insertCell(2);
 
+                    total += con.costo;
+
                     cell1.innerHTML = con.nombreMateria;
                     cell2.innerHTML = con.costo;
 
@@ -40,15 +43,14 @@
                                             Borrar
                                         </button>
                                         `;
+                    $("#totalCosto").text(total);
                 });
             }
         });
 
     }
 
-
     /**Autocomplete Materias disponibles */
-
     $("#materiasDisponibles").autocomplete({
         source: function (request, response){
             $.ajax({
@@ -69,10 +71,14 @@
             })
         },
         select: function(event, ui){
-            console.log(ui);
-            
+            addMateria(ui);
         }
     });
 
+    function addMateria(datos)
+    {
+        let materiaAdd = datos.item.value;
 
+
+    }
 })(jQuery);
