@@ -77,19 +77,23 @@
 
     function addMateria(datos)
     {
-        let materiaAdd = datos.item.value;
+        // let materiaAdd = datos.item.value;
+        let obj = {};
+        obj.AlumnoId = Id;
+        obj.MateriaId = datos.item.value;
 
         $.ajax({
             url: "../../AlumnoMateria/AddAlumnoMateria",
             type: "POST",
             dataType: "json",
-            data: { 
-                AlumnoId: 
-                MateriaId: materiaAdd 
-            },
+            // data: JSON.stringify(obj),
+            data: '{am: ' + JSON.stringify(obj) + '}',
             success: function(data){
                 console.log(data);   
-            }
+            },  
+            error: function () {  
+                alert("Error while inserting data");  
+            }  
         })
         
     }
