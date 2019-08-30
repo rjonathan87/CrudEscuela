@@ -1,70 +1,68 @@
 using System.Linq;
 using System.Threading.Tasks;
+using CrudEscuela.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CrudEscuela.Models;
 
-namespace CrudEscuela.Controllers
-{
-    public class AlumnoMateriaController : Controller
-    {
+namespace CrudEscuela.Controllers {
+    public class AlumnoMateriaController : Controller {
         private readonly ApplicationDbContext _context;
 
-        public AlumnoMateriaController(ApplicationDbContext context)
-        {
+        public AlumnoMateriaController (ApplicationDbContext context) {
             _context = context;
         }
 
         // GET: obtenermos todas las materias de los alumnos
-        [Produces("application/json")]
+        [Produces ("application/json")]
         [HttpPost]
-        public async Task<JsonResult> GetMateriasByAlumno(int Id)
-        {
+        public async Task<JsonResult> GetMateriasByAlumno (int Id) {
             var alumnomaterias = _context.AlumnosMaterias
-                .Where(a => a.AlumnoId == Id)
-                .Include(am => am.Materia)
-                .Select(r => new Models.Materia
-                {
+                .Where (a => a.AlumnoId == Id)
+                .Include (am => am.Materia)
+                .Select (r => new Models.Materia {
                     Id = r.Materia.Id,
-                    NombreMateria = r.Materia.NombreMateria,
-                    Activo = r.Materia.Activo,
-                    Costo = r.Materia.Costo
-                }
-                )
-                .ToListAsync();
+                        NombreMateria = r.Materia.NombreMateria,
+                        Activo = r.Materia.Activo,
+                        Costo = r.Materia.Costo
+                })
+                .ToListAsync ();
 
-            return Json(await alumnomaterias);
+            return Json (await alumnomaterias);
         }
 
+        //POST: AlumnoMateria
         [HttpPost]
-        public ActionResult AddAlumnoMateria(AlumnoMateria am)
-        {
-            // _context.AlumnosMaterias.Add(am);
-            // _context.SaveChanges();
-            // string message = "Agregado correctamente";
-            return Json( am );
+        public async Task<ActionResult> PostAlumnoMateria (AlumnoMateria alumnosMaterias) {
+            _context.AlumnosMaterias.Add (alumnosMaterias);
+
+            try {
+                await _context.SaveChangesAsync ();
+            } catch (DbUpdateException) {
+                if (AlumnoMateriaExists (alumnosMaterias.AlumnoId, alumnosMaterias.MateriaId)) {
+                    return BadRequest ();
+                } else {
+                    throw;
+                }
+            }
+
+            return await GetMateriasByAlumno (alumnosMaterias.AlumnoId);
         }
 
-        // public async Task<ActionResult> AddAlumnoMateria(int AlumnoId, int MateriaId)
-        // {
-        //     if (!AlumnoMateriaExists(AlumnoId, MateriaId))
-        //     {
-        //         // var alumnoMateriaExists = _context.AlumnosMaterias
-        //         //     .Where(x => x.AlumnoId == AlumnoId && x.MateriaId == MateriaId)
-        //         //     .ToListAsync();
-        //         // return Json(await alumnoMateriaExists);
-        //         _context.Add(alumno);
-        //         await _context.SaveChangesAsync();
-        //         return RedirectToAction(nameof(Index));
-        //     }
-        //     else{
-        //         return Ok();
-        //     }
-        // }
+        // POST: AlumMateria/Delete/2
+        [HttpDelete]
+        public async Task<IActionResult> Delete (int idAlumno, int idMateria) {
 
-        private bool AlumnoMateriaExists(int AlumnoId, int MateriaId)
-        {
-            return _context.AlumnosMaterias.Any(e => e.AlumnoId == AlumnoId && e.MateriaId == MateriaId);
+            var alumnomateria = await _context.AlumnosMaterias
+                .Where (x => x.AlumnoId == idAlumno && x.MateriaId == idMateria)
+                .FirstOrDefaultAsync ();
+            _context.AlumnosMaterias.Remove (alumnomateria);
+            await _context.SaveChangesAsync ();
+
+            return await GetMateriasByAlumno (idAlumno);
+        }
+
+        private bool AlumnoMateriaExists (int AlumnoId, int MateriaId) {
+            return _context.AlumnosMaterias.Any (e => e.AlumnoId == AlumnoId && e.MateriaId == MateriaId);
         }
     }
 }

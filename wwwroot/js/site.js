@@ -1,13 +1,13 @@
-﻿(function($){
+﻿(function ($) {
 
     //cargamos los datos a la tabla de materias
     var Id = $("#Id").val();
-    
+
     listaDeMaterias(Id); //aquí se carga el id que viene de la url
 
     function listaDeMaterias(Id) {
         $("#table-data-materias tbody").remove();
-        
+
         $.ajax({
             url: "../../AlumnoMateria/GetMateriasByAlumno",
             type: "post",
@@ -18,12 +18,12 @@
             success: function (data) {
                 console.log(data);
                 var total = 0;
-                
+
                 let table = document.getElementById("table-data-materias");
                 tbody = table.createTBody();
 
                 $.each(data, function (i, con) {
-                    
+
                     var row = tbody.insertRow();
 
                     var cell1 = row.insertCell(0);
@@ -37,8 +37,8 @@
 
                     cell3.innerHTML = `
                                         <button class='btn btn-danger btn_materia_delete' 
-                                            data-idAlumno=${ Id }
-                                            data-idMateria=${ con.id } 
+                                            data-idAlumno=${ Id}
+                                            data-idMateria=${ con.id} 
                                             role='button' title='Eliminar'>
                                             Borrar
                                         </button>
@@ -52,49 +52,78 @@
 
     /**Autocomplete Materias disponibles */
     $("#materiasDisponibles").autocomplete({
-        source: function (request, response){
+        source: function (request, response) {
             $.ajax({
                 url: "../../Materia/MateriasDisponibles",
                 type: "POST",
                 dataType: "json",
                 data: { search: request.term },
-                success: function(data){
-                    response($.map(data, function(item){
-                        return { 
-                            value :     item.id,
-                            label:      item.nombreMateria,
-                            activo:     item.activo,
-                            costo:      item.costo
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return {
+                            value: item.id,
+                            label: item.nombreMateria,
+                            activo: item.activo,
+                            costo: item.costo
                         }
                     }))
                 }
             })
         },
-        select: function(event, ui){
+        select: function (event, ui) {
             addMateria(ui);
         }
     });
 
-    function addMateria(datos)
-    {
+    function addMateria(datos) {
         // let materiaAdd = datos.item.value;
-        let obj = {};
-        obj.AlumnoId = Id;
-        obj.MateriaId = datos.item.value;
+
+        var AlumnoId = Id;
+        var MateriaId = datos.item.value;
 
         $.ajax({
-            url: "../../AlumnoMateria/AddAlumnoMateria",
+            url: "../../AlumnoMateria/PostAlumnoMateria",
             type: "POST",
             dataType: "json",
-            // data: JSON.stringify(obj),
-            data: '{am: ' + JSON.stringify(obj) + '}',
-            success: function(data){
-                console.log(data);   
-            },  
-            error: function () {  
-                alert("Error while inserting data");  
-            }  
-        })
-        
+            data: {
+                "AlumnoId": AlumnoId,
+                "MateriaId": MateriaId
+            },
+            success: function (data) {
+                console.log(data);
+                listaDeMaterias(Id);
+                $("#materiasDisponibles").val('');
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert('Solicitud Erronea, no puedes duplicar Materias!!');
+        });
+
     }
+
+    /** Delete Materias del alumno */
+    $("#table-data-materias").on('click', '.btn_materia_delete', function (e) {
+        if (confirm("Está seguro de eliminar la materia?")) {
+            let IdAlumno = $(this).data("idalumno");
+            let IdMateria = $(this).data("idmateria");
+
+            $.ajax({
+                url: "../../AlumnoMateria/Delete",
+                type: "DELETE",
+                dataType: "json",
+                data: {
+                    idAlumno: IdAlumno,
+                    idMateria: IdMateria
+                },
+                success: (data) => {
+                    console.log(data);
+                    listaDeMaterias(Id);
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrow);
+
+            });
+        }
+    });
+
+
 })(jQuery);
